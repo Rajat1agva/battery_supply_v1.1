@@ -87,7 +87,7 @@ int main (void)
 	battery_init();
 	ADC0_init();  //Initialize ADC
 	ADC0_window_compare_init();
-	
+	MOSFET_PORT.OUTSET |= (1<<4);
 
 	while(1)
 	{
@@ -169,12 +169,12 @@ bool charger_detection(void)
  		battery_low_flag = false;				//in case of low battery if the charger is connected then low battery flag will be off
  		USART1_sendString("CHARGER CONNECTED");
 		USART1_sendInt(ADC0_read(channel_0));
-		if((ADC0_read(channel_0))<500)
-		{
+		if((ADC0_read(channel_6))<500)
+		{  // MOSFET_PORT.OUTCLR |= (1<<4);// Mosfet off
 			USART1_sendString("Charging complete");
 			full_charge_flag = true;
 		}
-		else if ((ADC0_read(channel_0))>1000)
+		else if ((ADC0_read(channel_6))>1000)
 		{full_charge_flag = false;
 		}
 		
